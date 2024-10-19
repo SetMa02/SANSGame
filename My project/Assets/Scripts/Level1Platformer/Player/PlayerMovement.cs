@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         _isClimbing = false;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (_isClimbing)
         {
@@ -90,21 +90,25 @@ public class PlayerMovement : MonoBehaviour
     private void Climbing()
     {
         _rigidbody2D.gravityScale = 0f;
-        if (Input.GetKey(KeyCode.E)) // Detach from ladder on E press
+        if (Input.GetKey(KeyCode.E))
         {
             StopClimbing();
         }
-        else if (Input.GetKey(KeyCode.W)) // Climb up on W press
+        else if (Input.GetKey(KeyCode.W))
         {
             _rigidbody2D.velocity = new Vector2(0f, _speed);
             _animator.SetFloat("ClimbSpeed", _speed);
         }
-        else if (Input.GetKey(KeyCode.S)) // Climb up on W press
+        else if (Input.GetKey(KeyCode.S)) 
         {
            
             _rigidbody2D.velocity = new Vector2(0f, -_speed);
             _animator.SetFloat("ClimbSpeed", -_speed);
-
+        }
+        else
+        {
+            _rigidbody2D.velocity = new Vector2(0f, 0f);
+            _animator.SetFloat("ClimbSpeed", 0f);
         }
     }
 
