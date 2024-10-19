@@ -33,14 +33,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (_isClimbing)
+        {
+            Climbing();
+        }
         Movement();
         CheckFalling();
     }
 
     private void Movement()
     {
-        if (_isClimbing == false)
-        {
+        
             _currentSpeed = _speed;
             _direction = Vector3.zero;
             if (Input.GetKey(KeyCode.A))
@@ -75,35 +78,33 @@ public class PlayerMovement : MonoBehaviour
             _rigidbody2D.velocity = _direction;
             _animator.SetFloat("Speed", Mathf.Abs(_direction.x));
             
-            if (Input.GetKeyUp(KeyCode.E) && _isLedderIsNear) // Check for E key press near ladder
+            if (Input.GetKey(KeyCode.E) && _isLedderIsNear) // Check for E key press near ladder
             {
                 _animator.SetBool("IsClimbing", true);
                 _isClimbing = true;
                 Debug.Log("Stick");
             }
-        }
-        else
-        {
-            Climbing();
-        }
+        
     }
 
     private void Climbing()
     {
         _rigidbody2D.gravityScale = 0f;
-        if (Input.GetKeyUp(KeyCode.E)) // Detach from ladder on E press
+        if (Input.GetKey(KeyCode.E)) // Detach from ladder on E press
         {
             StopClimbing();
         }
-        else if (Input.GetKeyDown(KeyCode.W)) // Climb up on W press
+        else if (Input.GetKey(KeyCode.W)) // Climb up on W press
         {
             _rigidbody2D.velocity = new Vector2(0f, _speed);
             _animator.SetFloat("ClimbSpeed", _speed);
         }
-        else if (Input.GetKeyDown(KeyCode.S)) // Climb up on W press
+        else if (Input.GetKey(KeyCode.S)) // Climb up on W press
         {
-            _rigidbody2D.velocity = new Vector2(0f, _speed);
-            _animator.SetFloat("ClimbSpeed", _speed);
+           
+            _rigidbody2D.velocity = new Vector2(0f, -_speed);
+            _animator.SetFloat("ClimbSpeed", -_speed);
+
         }
     }
 
@@ -112,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         _animator.SetBool("IsClimbing", false);
         _isClimbing = false;
         _rigidbody2D.gravityScale = 1f;
+        _animator.SetFloat("ClimbSpeed", 0f);
     }
 
     private void CheckFalling()
